@@ -24,7 +24,8 @@ will produce the file ```u_q125.dat```. You can then run the gnuplot script
 
 to produce the figure file ```u_q125.eps```, which is the first pane in Figure 1.
 
-# Taking it further: Checking the stability of the evolutionarily singular strategy
+# Taking it further
+## Checking the stability of the evolutionarily singular strategy
 
 The script ```solvedbo.m``` above finds the evolutionarily singular strategy, however ideally we'd like to demonstrate that this singular strategy is both ESS-stable (meaning that no nearby variant strategy can invade it) and that it is convergent stable (meaning that it is an evolutionary attractor).
 
