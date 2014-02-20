@@ -24,43 +24,77 @@ will produce the file ```u_q125.dat```. You can then run the gnuplot script
 
 to produce the figure file ```u_q125.eps```, which is the first pane in Figure 1.
 
-# Taking it further: Checking the stability of the evolutionarily singular strategy
+# Taking it further 
 
-The script ```solvedbo.m``` above finds the evolutionarily singular strategy, however ideally we'd like to demonstrate that this singular strategy is both ESS-stable (meaning that no nearby variant strategy can invade it) and that it is convergent stable (meaning that it is an evolutionary attractor).
+## Changing parameter values
 
-After running the script
+The function ```solvedbo``` can also be used to explore how Figure 1 changes with different parameter values. For example, the quickstart above could also be generated in the following way.
 
-    > solvedbo;
+First, create a dictionary ```p``` with your default parameter values. I have stored one in the script ```params.m``` that you can use
 
-the workspace will now have access to the parameter dictionary ```p```, a vector of the optimal hatching times $x_c$
+    > params;
+    > p
+    p =
+
+        scalar structure containing the fields:
+
+            K =  100
+            b_e =  0.030000
+            a =  3
+            sigma =  5
+            Q_0 =  0.050000
+            b_q =  0.50000
+            u_q =  134
+            L_m =  170
+            b_s =  0.075000
+            M =  0.50000
+            z_f =  40
+            z_n =  14
+
+Let's say I'd like to look at the effect of changing the parameter ```u_q``` to 125. I want to plot the evolutionarily singular phenology over the optimal hatching time range of 135 - 175. I have a fair idea that the arrival date when optimal hatching is late is about day 120 (implying an approximate prelaying period of 175-120-z_n), and I'd like to print the results to a .dat file. I would run
+
+    > [x_cV,yzV,nV]=solvedbo(p,'u_q',125,175,135,120,175-120-p.z_n,1)
+
+This will write a .dat file ```u_q125.dat``` as before. I will also now have the optimal hatching times ```x_cV``` and evoluttionarily singular strategies ```yzV``` in the workspace
 
     x_cV =
 
-    Columns 1 through 9:
-    175.00   174.08   173.16   172.24   171.33   170.41   169.49   168.57   167.65
+    Columns 1 through 6:
+    175.00   174.18   173.37   172.55   171.73   170.92
     ...
     etc.
 
-and the corresponding singular $(y^*,z^*)$
+## Checking the stability of the evolutionarily singular strategy
 
-    yzV =
+The script ```solvedbo.m``` above finds the evolutionarily singular strategy, however ideally we'd like to demonstrate that this singular strategy is both ESS-stable (meaning that no nearby variant strategy can invade it) and that it is convergent stable (meaning that it is an evolutionary attractor).
 
-    130.3250    30.6742
-    130.3282    29.7526
-    130.3281    28.8343
-    130.3279    27.9160
+After running the function above, you will have ```p```, ```x_cV```, and ```yzV``` in the workspace. NOTE if you've used the ```solvedbo``` function the output will not match ```p``` for the change-variable, so update that first
+
+    > p.u_q = 125
+
+Now we can test evolutionary stability. There are two types of stability -- ESS stability and convergence stability -- and there are two sets of code to check for each -- one numerical and one analytic. Let's use check the ESS-stability of our system numerically
+
+    > [numess,numHess] = numcheck_ess(p,yzV,x_cV);
+    > numess
+    numess =
+    -3.8428e-04
+    -3.8418e-04
     ...
     etc.
 
-To check that each singular strategy is ESS-stable
+The vector ```numess``` is the eigenvalue of the Hessian matrix with the largest real part, as found numerically. ```numHess``` is the Hessian matrix of the last evolutionarily singular strategy evaluated, so you can use this to take a closer look at single points. In order to establish ESS-stability, this eigenvalue must be less than zero (see paper). You could plot this ```plot(x_cV,numess)``` to see how it changes with optimal hatching time.
 
-    > check_ess(p,yzV,x_cV)
+Let's check the convergence stability of our system semi-analytically
 
-will return the eigenvalue of the Jacobian of the selection gradient with largest real part, which must be less than 0. To check that each singular strategy is convergent stable
+    > [conv,Jac] = check_conv(p,yzV,x_cV);
+    > conv
+    conv =
+    -3.8429e-04
+    -3.8418e-04
+    ...
+    etc.
 
-    > check_conv(p,yzV,x_cV)
+The vector ```conv``` is the is the eigenvalue of the Jacobian matrix with the largest real part, and it must also be less than zero in order to establish convergence stability. If you open ```check_conv.m``` you can see expressions for the derivatives of each of the components. These were found symbolically using Sage. The function ```numcheck_conv.m``` was used to verify numerically that the expressions were correct, and likewise there is a ```check_ess.m``` which provides the semi-analytic counterpart to ```numcheck_ess.m``` above.
 
-will return the eigenvalue of the Hessian with largest real part, which must be less than 0.
-
-Refer to the Supplementary Material for explanations of the relationships between stability constraints and the eigenvalues.
+Refer to the Supplementary Material of the paper for further explanations of the relationships between stability constraints and the eigenvalues.
 
