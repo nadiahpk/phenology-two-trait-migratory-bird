@@ -25,7 +25,6 @@ will produce the file ```u_q125.dat```. You can then run the gnuplot script
 to produce the figure file ```u_q125.eps```, which is the first pane in Figure 1.
 
 # Taking it further
-## Checking the stability of the evolutionarily singular strategy
 
 ## Changing parameter values
 
