@@ -24,6 +24,8 @@ will produce the file ```u_q125.dat```. You can then run the gnuplot script
 
 to produce the figure file ```u_q125.eps```, which is the first pane in Figure 1.
 
+![Figure 1a](https://github.com/carlohamalainen/phenology-two-trait-migratory-bird/raw/master/u_q125.png)
+
 # Taking it further
 
 ## Changing parameter values
