@@ -1,7 +1,8 @@
-function [x_cV,yzV,nV] = solvedbo(p,change_p,change_p_val,x_c_hi,x_c_lo,y0,z0,print_flag);
+function [x_cV,yzV,nV] = solvedbo(p,change_p,change_p_val,x_c_hi,x_c_lo,y0,z0,print_flag,plot_flag);
 
 % -- [x_cV,yzV,nV] = solvedbo()
 % -- [x_cV,yzV,nV] = solvedbo(p,change_p,change_p_val,x_c_hi,x_c_lo,y0,z0,print_flag);
+% -- [x_cV,yzV,nV] = solvedbo(p,change_p,change_p_val,x_c_hi,x_c_lo,y0,z0,print_flag,plot_flag);
 %
 %
 % The purpose of this function is to plot evolutionarily
@@ -52,6 +53,10 @@ function [x_cV,yzV,nV] = solvedbo(p,change_p,change_p_val,x_c_hi,x_c_lo,y0,z0,pr
 % written to a .dat file or not. Set this to 1 if you'd like
 % that or any other value if not.
 %
+% plot_flag: Determines if the return values will be
+% plotted within Octave or not. Set this to 1 if you'd like
+% that or any other value if not.
+%
 %
 % OUTPUTS
 % 
@@ -63,6 +68,9 @@ function [x_cV,yzV,nV] = solvedbo(p,change_p,change_p_val,x_c_hi,x_c_lo,y0,z0,pr
 % nV: A vector of population sizes corresponding to x_cV.
 %
 
+if nargin < 9;
+    plot_flag = 1;
+end
 if nargin == 0;
     % User would like default, which I've set to the
     % left-most pane of Figure 1
@@ -175,14 +183,15 @@ if print_flag == 1
     fclose(fid);
 end
 
-% Plot the results within Octave
-plot(x_cV,yzV(:,1),'k;Arrival date;')
-hold on
-plot(x_cV,yzV(:,1)+yzV(:,2),'r;Laying date;')
-plot(x_cV,x_cV,'k.') 
-plot(x_cV,yzV(:,1)+yzV(:,2)+p.z_n,'b;Hatching date;')
-hold off
-xlabel('Optimal hatching time x_c')
-ylabel('Bird phenology')
-axis equal
-
+if plot_flag == 1
+    % Plot the results within Octave
+    plot(x_cV,yzV(:,1),'k;Arrival date;')
+    hold on
+    plot(x_cV,yzV(:,1)+yzV(:,2),'r;Laying date;')
+    plot(x_cV,x_cV,'k.') 
+    plot(x_cV,yzV(:,1)+yzV(:,2)+p.z_n,'b;Hatching date;')
+    hold off
+    xlabel('Optimal hatching time x_c')
+    ylabel('Bird phenology')
+    axis equal
+end
