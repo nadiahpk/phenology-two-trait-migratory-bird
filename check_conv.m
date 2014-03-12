@@ -154,18 +154,22 @@ for ind = 1:length(x_cV);
     dPsdZ*Pe*dPhdz*Pf    + Ps*dPedZ*dPhdz*Pf      + Ps*Pe*dPhdzdz*Pf       + Ps*Pe*dPhdz*dPfdZ + ...
     dPsdZ*Pe*Ph*dPfdz    + Ps*dPedZ*Ph*dPfdz      + Ps*Pe*dPhdZ*dPfdz      + Ps*Pe*Ph*dPfdzdz;
 
+    % Check assuming no constraint on mutational matrix
     Jac = M*Jac; % Don't forget migration
     eigJ = eig(Jac);
     eigJ = real(eigJ);
     res = max(eigJ);
 
-    resV = [resV;res];
+    % Further check assuming mutational covariance
+    res2 = max(real(eig(Jac+Jac')));
+
+    resV = [resV;[res res2]];
 end
 
 % Plot it within Octave
 if length(x_cV) > 1
     plot(x_cV,resV);
     xlabel('Optimal hatching time x_c')
-    ylabel('Largest eigenvalue of Jacobian')
+    ylabel('Largest eigenvalue of Jacobian and J^s')
     title('Singular strategy is convergence stable where largest eig < 0')
 end
