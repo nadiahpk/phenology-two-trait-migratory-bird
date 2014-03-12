@@ -1,10 +1,10 @@
-function [x_cV,yzV,nV] = carlo(u_q);
+function [x_cV,yzV,nV,z_n] = solvedbowrapper(u_q);
 
-% -- [x_cV,yzV,nV] = carlo(u_q);
+% -- [x_cV,yzV,nV,z_n] = solvedbowrapper(u_q);
 %
 %
-% The purpose of this function is to create vectors ready
-% for a python slider that Carlo wants to create.
+% Run solvedbo with some sensible defaults, may be used
+% for an ipython slider.
 %
 % INPUTS
 %
@@ -19,7 +19,7 @@ function [x_cV,yzV,nV] = carlo(u_q);
 % yzV: A matrix of [y*,z*] values in the range specified,
 % corresponding to x_cV for easy plotting. This is used to
 % create the various curves and filled areas in the bottom
-% pane of Figure 1a,b, and c, the y-axis marked "bird 
+% pane of Figure 1a,b, and c, the y-axis marked "bird
 % phenology".
 %
 % nV: A vector of population sizes corresponding to x_cV. It
@@ -30,9 +30,10 @@ params; % Get dictionary of parameter values p
 change_p = 'u_q';
 change_p_val = u_q;
 x_c_hi = 175; x_c_lo = 135;
-y0 = 130; 
-z0 = x_c_hi-y0-p.z_n; 
+y0 = 130;
+z0 = x_c_hi-y0-p.z_n;
 print_flag = 0;
 plot_flag = 0;
 
 [x_cV,yzV,nV] = solvedbo(p,change_p,change_p_val,x_c_hi,x_c_lo,y0,z0,print_flag,plot_flag);
+z_n = p.z_n;
