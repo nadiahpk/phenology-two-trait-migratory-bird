@@ -2,7 +2,7 @@
 
 Kristensen, N.K., Johansson, J., Ripa, J. and Jonzen, N. Phenology of arrival and laying time in migratory birds in response to climate change. Paper in preparation.
 
-(https://zenodo.org/badge/doi/10.5281/zenodo.10005.png)
+![doi badg](https://zenodo.org/badge/doi/10.5281/zenodo.10005.png)
 
 # Quick Start
 
